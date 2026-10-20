@@ -8,6 +8,7 @@ import {
   Microscope,
   FileText,
   Database,
+  SlidersHorizontal,
   Dna,
   ChevronRight,
   LogOut,
@@ -30,6 +31,7 @@ const navItems: NavItem[] = [
   { id: "survival", label: "Survival Analysis", icon: <TrendingUp className="w-4 h-4" />, roles: ["pi", "clinician"] },
   { id: "expression", label: "Gene Expression", icon: <Microscope className="w-4 h-4" />, roles: ["pi", "analyst"] },
   { id: "clinical", label: "Clinical Data", icon: <FileText className="w-4 h-4" />, roles: ["pi", "clinician"] },
+  { id: "explorer", label: "Gene Explorer", icon: <SlidersHorizontal className="w-4 h-4" />, roles: ["pi", "clinician", "analyst"] },
   { id: "sources", label: "Data Sources", icon: <Database className="w-4 h-4" />, roles: ["pi", "analyst"] },
 ];
 
@@ -46,6 +48,7 @@ const viewLabels: Record<string, string> = {
   survival: "Survival Analysis",
   expression: "Gene Expression",
   clinical: "Clinical Data",
+  explorer: "Gene Explorer",
   sources: "Data Sources",
 };
 

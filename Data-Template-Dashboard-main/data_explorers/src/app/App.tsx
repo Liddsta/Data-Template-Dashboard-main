@@ -8,6 +8,7 @@ import { DoctorsView } from "./components/views/DoctorsView";
 import { TreatmentsView } from "./components/views/TreatmentsView";
 import { PatientsView } from "./components/views/PatientsView";
 import { RevenueView } from "./components/views/RevenueView";
+import { ExplorerView } from "./components/views/ExplorerView";
 
 type UserRole = "pi" | "clinician" | "analyst";
 
@@ -36,6 +37,7 @@ export default function App() {
       case "survival": return <DoctorsView />;
       case "expression": return <TreatmentsView />;
       case "clinical": return <PatientsView />;
+      case "explorer": return <ExplorerView />;
       case "sources": return <RevenueView />;
       default: return <OverviewView />;
     }

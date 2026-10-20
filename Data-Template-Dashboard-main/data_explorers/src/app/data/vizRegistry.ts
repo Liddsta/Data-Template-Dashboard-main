@@ -25,7 +25,9 @@ export type VizSlot =
   // Clinical Data
   | "clinical-expression-stage"
   | "clinical-expression-age"
-  | "clinical-expression-sex";
+  | "clinical-expression-sex"
+  // Interactive Explorer
+  | "explorer-dashboard";
 
 export interface VizSlotDef {
   /** Heading shown above the panel. */
@@ -103,6 +105,22 @@ export const vizSlots: Record<VizSlot, VizSlotDef> = {
     title: "Expression by Sex",
     description: "Expression distribution by sex.",
     sheet: "Expression by clinical group sex",
+  },
+
+  /**
+   * The full Tableau dashboard as a single panel. Unlike the individual
+   * worksheets, this one carries the workbook's `paramctrl` zone, so the Gene
+   * Parameter dropdown is usable here and drives every chart inside this frame.
+   *
+   * Height matches the dashboard's authored size (sizing-mode='vscroll',
+   * min/maxheight 2150) so it renders in full rather than in a nested scrollbar.
+   */
+  "explorer-dashboard": {
+    title: "Interactive Gene Explorer",
+    description:
+      "The complete Tableau dashboard. Use the Gene Parameter dropdown to switch genes — every chart in this panel updates together.",
+    sheet: "Dashboard 1",
+    height: 2150,
   },
 };
 
