@@ -56,7 +56,6 @@ export const cohortStats = {
   cancerType: "Hepatocellular Carcinoma",
   program: "TCGA",
   project: "TCGA-LIHC",
-  dataVersion: "GDC Data Release 38.0",
   releaseDate: "2023-12-01",
 };
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dna, FlaskConical, BarChart3, ShieldCheck, ChevronRight } from "lucide-react";
-import { summaryStats } from "../data/genomicsData";
+import { summaryStats, gdcCohort } from "../data/genomicsData";
 
 type UserRole = "pi" | "clinician" | "analyst";
 
@@ -90,9 +90,11 @@ export function LoginScreen({ onLogin }: Props) {
             </div>
           </div>
 
-          <div className="mt-8 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-muted-foreground">Controlled access via dbGaP authorization</span>
+          <div className="mt-8 flex items-start gap-2">
+            <ShieldCheck className="w-4 h-4 text-muted-foreground/60 flex-shrink-0 mt-0.5" />
+            <span className="text-xs text-muted-foreground">
+              Open-access summary data. Role selection changes which tabs are shown &mdash; it is not an access control.
+            </span>
           </div>
         </div>
 
@@ -156,7 +158,7 @@ export function LoginScreen({ onLogin }: Props) {
             <ChevronRight className="w-4 h-4" />
           </button>
           <p className="text-center text-xs text-muted-foreground mt-4">
-            TCGA-LIHC · GDC Release 38.0 · Controlled access
+            TCGA-LIHC · {gdcCohort.totalCases}-case GDC extract · Tableau Public workbook
           </p>
         </div>
       </div>

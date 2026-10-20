@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { summaryStats } from "../data/genomicsData";
+import { summaryStats, gdcCohort } from "../data/genomicsData";
 import {
   LayoutDashboard,
   Users,
@@ -12,7 +12,6 @@ import {
   ChevronRight,
   LogOut,
   Menu,
-  Bell,
 } from "lucide-react";
 
 type UserRole = "pi" | "clinician" | "analyst";
@@ -148,18 +147,9 @@ export function DashboardLayout({ children, currentView, onViewChange, onLogout,
             <div>
               <h1 className="text-base font-semibold text-foreground">{viewLabels[currentView]}</h1>
               <p className="text-xs text-muted-foreground hidden sm:block">
-                Liver Hepatocellular Carcinoma · GDC Release 38.0
+                Liver Hepatocellular Carcinoma · {gdcCohort.totalCases}-case GDC extract · {summaryStats.patientsTotal} analysed
               </p>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-mono text-emerald-400">Live · n={summaryStats.patientsTotal}</span>
-            </div>
-            <button className="p-2 rounded-lg hover:bg-slate-100 text-muted-foreground transition-colors">
-              <Bell className="w-4 h-4" />
-            </button>
           </div>
         </header>
 

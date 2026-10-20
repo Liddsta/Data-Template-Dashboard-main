@@ -150,7 +150,7 @@ export function PatientsView() {
           <span className="text-xs font-mono text-muted-foreground">
             Showing {filtered.length} of {clinicalPatients.length} representative cases
           </span>
-          <span className="text-xs text-muted-foreground/60">TCGA-LIHC · GDC Release 38.0</span>
+          <span className="text-xs text-muted-foreground/60">Template sample rows · not from the GDC extract</span>
         </div>
       </div>
     </div>
