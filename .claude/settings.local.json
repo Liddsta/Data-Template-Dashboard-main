@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite *)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}\\\\n' 'https://public.tableau.com/shared/ZTPPG5Z4M?:embed=y&:showVizHome=no&:toolbar=yes&:display_count=n&:origin=viz_share_link&:language=en-GB&:device=desktop')",
+      "Bash(curl -s 'https://public.tableau.com/shared/ZTPPG5Z4M?:embed=y&:showVizHome=no&:toolbar=yes&:display_count=n&:origin=viz_share_link&:language=en-GB&:device=desktop')",
+      "Bash(npx tsc *)",
+      "Bash(curl -sL -A 'Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 Chrome/131.0 Safari/537.36' -o /tmp/v.html -w 'status=%{http_code} size=%{size_download}\\\\nurl=%{url_effective}\\\\n' 'https://public.tableau.com/views/LiverDashboardVoz/Dashboard1?:embed=y&:showVizHome=no&:tabs=yes')",
+      "Read(//tmp/**)",
+      "Bash(grep -oE \"<dashboard[^>]{0,80}\" \"Liver Dashboard Voz.twb\")"
+    ]
+  }
+}
