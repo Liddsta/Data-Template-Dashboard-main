@@ -23,13 +23,33 @@ export const summaryStats = {
   fdrAdjustedP: 0.767,
 };
 
+/**
+ * The full TCGA-LIHC cohort as pulled from the GDC, parsed from
+ * Data/curated/clinical.csv and Data/raw/clinical/clinical.tsv.
+ *
+ * This is a DIFFERENT denominator from `summaryStats`: the GDC extract holds
+ * 414 cases, while the Tableau workbook analysed the 388 of them that had both
+ * expression and survival data. Both are real. Every chart must state which
+ * cohort it counts — never mix the two in one figure.
+ */
+export const gdcCohort = {
+  totalCases: 414,
+  alive: 264,
+  deceased: 150,
+  withSurvivalTime: 330,
+  medianAgeYears: 61.5,
+  agedCases: 403,
+  gradedCases: 400,
+  stagedCases: 274,
+};
+
 export const cohortStats = {
   totalCases: summaryStats.patientsTotal,
-  // The fields below are template sample data, NOT from the Liver Dashboard
-  // workbook. The summary table does not cover gene counts, mutation burden or
-  // age, so they cannot be reconciled against it.
+  medianAge: gdcCohort.medianAgeYears,
+  // The fields below are template sample data. The GDC extract contains no
+  // mutation files at all (no MAF/VCF), so mutation counts and TMB have no
+  // source to reconcile against.
   totalGenes: 20531,
-  medianAge: 59,
   totalMutations: 7066,
   tmb: 2.8,
   primarySite: "Liver",
@@ -41,16 +61,25 @@ export const cohortStats = {
 };
 
 /* ------------------------------------------------------------------------- *
- * SAMPLE DATA BELOW THIS LINE
+ * MIXED REAL AND SAMPLE DATA BELOW — check each export's own comment.
  *
- * Everything from here down is template placeholder data. The Liver Dashboard
- * workbook contains only expression, survival, stage, sex and age-band data —
- * it has no mutation calls, no tumour grades, no risk factors and no file
- * inventory, so none of the figures below can be reconciled against it.
+ * REAL, from the GDC extract in /Data (n=414):
+ *   stageDistribution, ageDistribution, genderDistribution, raceDistribution,
+ *   tumorGradeDistribution, gdcCohort
  *
- * They also imply cohort sizes that disagree with the real 388 (grade, risk
- * factors and mutated-gene frequencies all imply ~371; race implies 414).
- * Every UI surface that renders them must carry <SampleDataBadge />.
+ * SAMPLE placeholder — no source exists anywhere in /Data, so every UI surface
+ * rendering these must carry <SampleDataBadge />:
+ *   topMutatedGenes, mutationTypes, snvClassification, mutationBurdenByStage
+ *     -> the extract contains NO mutation files (no MAF, no VCF)
+ *   riskFactors
+ *     -> exposure.tsv covers only 6 cases with every alcohol field empty, and
+ *        there are no hepatitis or cirrhosis columns in the clinical data
+ *   survivalByStage
+ *     -> curated/km_curves.csv is degenerate: every gene and group drops
+ *        1.0 -> 0.0 at day 123, an artifact of too few cases
+ *   clinicalPatients, datasetMetrics
+ *     -> the extract holds 2 RNA-seq files and 5 cases of expression data,
+ *        not the 742/424/379 file inventory quoted here
  * ------------------------------------------------------------------------- */
 
 export const topMutatedGenes = [
@@ -78,23 +107,22 @@ export const mutationTypes = [
 ];
 
 /**
- * Real stage counts, derived from the "High vs low cohort makeup" worksheet.
- * That sheet reports each stage as a percentage within the high and low groups
- * (194 patients each); multiplying out and summing reconciles exactly to 388.
+ * Real AJCC pathologic stage from the GDC extract (n=414), with the substages
+ * rolled up (IIIA/IIIB/IIIC -> III, IVA -> IV, IIB -> II).
  *
- * `percentage` is of the 290 staged patients, not of all 388 — the remaining
- * 98 have no stage recorded (see `stageNotReported`). Keep this list to the
- * four stages: three views map over it positionally.
+ * `percentage` is of the 274 staged cases. The other 140 are excluded: 139 have
+ * no stage recorded and 1 is Stage 0. Keep this list to the four stages — three
+ * views map over it positionally.
  */
 export const stageDistribution = [
-  { stage: "Stage I", count: 155, percentage: 53.4 },
-  { stage: "Stage II", count: 69, percentage: 23.8 },
-  { stage: "Stage III", count: 61, percentage: 21.0 },
-  { stage: "Stage IV", count: 5, percentage: 1.7 },
+  { stage: "Stage I", count: 145, percentage: 52.9 },
+  { stage: "Stage II", count: 65, percentage: 23.7 },
+  { stage: "Stage III", count: 59, percentage: 21.5 },
+  { stage: "Stage IV", count: 5, percentage: 1.8 },
 ];
 
-/** Patients with no stage recorded (388 total − 290 staged). */
-export const stageNotReported = 98;
+/** Cases outside the four-stage breakdown (139 unrecorded + 1 Stage 0). */
+export const stageNotReported = 140;
 
 export const survivalByStage = [
   { month: 0,  stageI: 100,  stageII: 100,  stageIII: 100,  stageIV: 100  },
@@ -111,18 +139,18 @@ export const survivalByStage = [
 ];
 
 /**
- * Real age bands, derived from the "High vs low cohort makeup age bands"
- * worksheet. Its percentages are of a 378-patient denominator (the 0.264550265%
- * unit is exactly 1/378), so 10 of the 388 patients have no age recorded.
+ * Real age bands from the GDC extract (n=414). `age_at_diagnosis` is stored in
+ * days; these are days/365.25 bucketed into the same bands the Tableau workbook
+ * uses. 11 cases have no age recorded.
  */
 export const ageDistribution = [
-  { range: "<50",   count: 71  },
-  { range: "50–64", count: 139 },
-  { range: "65+",   count: 168 },
+  { range: "<50",   count: 80  },
+  { range: "50–64", count: 160 },
+  { range: "65+",   count: 163 },
 ];
 
-/** Patients with no age recorded (388 total − 378 with an age band). */
-export const ageNotReported = 10;
+/** Cases with no age recorded (414 total − 403 with an age). */
+export const ageNotReported = 11;
 
 export const riskFactors = [
   { factor: "Cirrhosis",   present: 156, percentage: 42.0 },
@@ -132,13 +160,11 @@ export const riskFactors = [
   { factor: "NASH/NAFLD",  present: 48,  percentage: 12.9 },
 ];
 
-/**
- * Real sex split, derived from the "High vs low cohort makeup sex" worksheet.
- * That sheet gives the female/male share within each stage group; weighting by
- * the stage counts above lands on whole patients and sums to 388.
- */
-export const genderDistribution = { male: 241, female: 147 };
+/** Real sex split from the GDC extract — sums to the full 414 cases. */
+export const genderDistribution = { male: 268, female: 146 };
 
+/** Real race distribution from the GDC extract; the last row merges
+ *  "not reported" (11), "Unknown" (4) and "American Indian/Alaska Native" (2). */
 export const raceDistribution = [
   { race: "White",                        count: 216 },
   { race: "Asian",                        count: 161 },
@@ -146,11 +172,17 @@ export const raceDistribution = [
   { race: "Not Reported / Unknown",       count: 17  },
 ];
 
+/**
+ * Real tumour grade from Data/raw/clinical/clinical.tsv, deduplicated to one
+ * grade per case (that file carries several rows per case).
+ *
+ * `percentage` is of the 400 graded cases; 3 are GX and 11 have no grade.
+ */
 export const tumorGradeDistribution = [
-  { grade: "G1 (Well differentiated)",   count: 55,  percentage: 14.8 },
-  { grade: "G2 (Moderately diff.)",      count: 163, percentage: 43.9 },
-  { grade: "G3 (Poorly diff.)",          count: 121, percentage: 32.6 },
-  { grade: "G4 (Undifferentiated)",      count: 32,  percentage: 8.6  },
+  { grade: "G1 (Well differentiated)",   count: 55,  percentage: 13.8 },
+  { grade: "G2 (Moderately diff.)",      count: 192, percentage: 48.0 },
+  { grade: "G3 (Poorly diff.)",          count: 140, percentage: 35.0 },
+  { grade: "G4 (Undifferentiated)",      count: 13,  percentage: 3.3  },
 ];
 
 export const mutationBurdenByStage = [

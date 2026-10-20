@@ -3,10 +3,11 @@ import {
 } from "recharts";
 import { Users, UserCheck, UserX, Activity } from "lucide-react";
 import {
-  ageDistribution, ageNotReported, riskFactors, genderDistribution, tumorGradeDistribution, stageDistribution, cohortStats,
+  ageDistribution, ageNotReported, riskFactors, genderDistribution, tumorGradeDistribution, stageDistribution, cohortStats, gdcCohort,
 } from "../../data/genomicsData";
 import { VizPanel } from "../VizPanel";
 import { SampleDataBadge } from "../SampleDataBadge";
+import { CohortTag } from "../CohortTag";
 
 const tooltipStyle = {
   backgroundColor: "#ffffff",
@@ -18,22 +19,24 @@ const tooltipStyle = {
 };
 
 export function BedManagementView() {
-  const malePercent = ((genderDistribution.male / cohortStats.totalCases) * 100).toFixed(1);
-  const femalePercent = ((genderDistribution.female / cohortStats.totalCases) * 100).toFixed(1);
+  // genderDistribution counts the full GDC extract, so it must be divided by
+  // that cohort — not by cohortStats.totalCases, which is the 388 subset.
+  const malePercent = ((genderDistribution.male / gdcCohort.totalCases) * 100).toFixed(1);
+  const femalePercent = ((genderDistribution.female / gdcCohort.totalCases) * 100).toFixed(1);
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-foreground">Cohort Analysis</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Demographic breakdown, risk factor prevalence, and tumor characteristics across {cohortStats.totalCases} patients.
+          Demographics and tumour characteristics for the full {gdcCohort.totalCases}-case GDC extract. The three Tableau panels below cover the {cohortStats.totalCases}-case expression subset &mdash; each figure is tagged with the cohort it counts.
         </p>
       </div>
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Median Age", value: `${cohortStats.medianAge} yr`, icon: <Activity className="w-4 h-4 text-blue-600" />, bg: "bg-blue-600/10", sample: true },
+          { label: "Median Age", value: `${cohortStats.medianAge} yr`, icon: <Activity className="w-4 h-4 text-blue-600" />, bg: "bg-blue-600/10", sample: false },
           { label: "Male Cases", value: `${genderDistribution.male} (${malePercent}%)`, icon: <Users className="w-4 h-4 text-sky-400" />, bg: "bg-sky-500/15", sample: false },
           { label: "Female Cases", value: `${genderDistribution.female} (${femalePercent}%)`, icon: <UserCheck className="w-4 h-4 text-violet-400" />, bg: "bg-violet-500/15", sample: false },
           { label: "Cirrhosis Rate", value: "42.0%", icon: <UserX className="w-4 h-4 text-rose-400" />, bg: "bg-rose-500/15", sample: true },
@@ -41,7 +44,7 @@ export function BedManagementView() {
           <div key={label} className="bg-card border border-border rounded-lg p-5">
             <div className="flex items-start justify-between gap-2 mb-3">
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${bg}`}>{icon}</div>
-              {sample && <SampleDataBadge />}
+              {sample ? <SampleDataBadge /> : <CohortTag n={gdcCohort.totalCases} />}
             </div>
             <p className="text-xl font-semibold text-foreground font-mono">{value}</p>
             <p className="text-xs text-muted-foreground mt-1">{label}</p>
@@ -57,9 +60,12 @@ export function BedManagementView() {
 
       {/* Age distribution */}
       <div className="bg-card border border-border rounded-lg p-5">
-        <h3 className="text-sm font-semibold text-foreground mb-1">Age at Diagnosis</h3>
+        <div className="flex items-center gap-2 flex-wrap mb-1">
+          <h3 className="text-sm font-semibold text-foreground">Age at Diagnosis</h3>
+          <CohortTag n={gdcCohort.agedCases} label="with age" />
+        </div>
         <p className="text-xs text-muted-foreground mb-4">
-          {ageDistribution.reduce((a, b) => a + b.count, 0)} patients with an age band recorded; {ageNotReported} not reported
+          From GDC <code className="font-mono">age_at_diagnosis</code> · {ageNotReported} cases not reported
         </p>
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={ageDistribution} margin={{ left: -10, right: 10, top: 0, bottom: 0 }}>
@@ -96,9 +102,11 @@ export function BedManagementView() {
         <div className="bg-card border border-border rounded-lg p-5">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <h3 className="text-sm font-semibold text-foreground">Tumor Grade Distribution</h3>
-            <SampleDataBadge />
+            <CohortTag n={gdcCohort.gradedCases} label="graded" />
           </div>
-          <p className="text-xs text-muted-foreground mb-4">WHO histological grading</p>
+          <p className="text-xs text-muted-foreground mb-4">
+            WHO histological grading · {gdcCohort.totalCases - gdcCohort.gradedCases} cases ungraded or GX
+          </p>
           <div className="space-y-3">
             {tumorGradeDistribution.map((g, i) => {
               const colors = ["#10b981", "#f59e0b", "#f97316", "#f43f5e"];

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Search, FileText, CheckCircle2, XCircle } from "lucide-react";
-import { clinicalPatients, cohortStats } from "../../data/genomicsData";
+import { clinicalPatients, cohortStats, gdcCohort } from "../../data/genomicsData";
 import { SampleDataBadge } from "../SampleDataBadge";
+import { CohortTag } from "../CohortTag";
 import { VizPanel } from "../VizPanel";
 
 const stageColors: Record<string, string> = {
@@ -35,15 +36,15 @@ export function PatientsView() {
       {/* Summary stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Total Patients", value: cohortStats.totalCases, icon: <FileText className="w-4 h-4 text-blue-600" />, bg: "bg-blue-600/10", sample: false },
-          { label: "With Survival Data", value: 334, icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />, bg: "bg-emerald-500/15", sample: true },
-          { label: "Deceased", value: 150, icon: <XCircle className="w-4 h-4 text-rose-400" />, bg: "bg-rose-500/15", sample: true },
-          { label: "Median AFP (U/L)", value: 142, icon: <FileText className="w-4 h-4 text-sky-400" />, bg: "bg-sky-500/15", sample: true },
-        ].map(({ label, value, icon, bg, sample }) => (
+          { label: "Total Cases (GDC)", value: gdcCohort.totalCases, icon: <FileText className="w-4 h-4 text-blue-600" />, bg: "bg-blue-600/10", sample: false, n: gdcCohort.totalCases },
+          { label: "With Survival Data", value: gdcCohort.withSurvivalTime, icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />, bg: "bg-emerald-500/15", sample: false, n: gdcCohort.totalCases },
+          { label: "Deceased", value: gdcCohort.deceased, icon: <XCircle className="w-4 h-4 text-rose-400" />, bg: "bg-rose-500/15", sample: false, n: gdcCohort.totalCases },
+          { label: "Median AFP (U/L)", value: 142, icon: <FileText className="w-4 h-4 text-sky-400" />, bg: "bg-sky-500/15", sample: true, n: 0 },
+        ].map(({ label, value, icon, bg, sample, n }) => (
           <div key={label} className="bg-card border border-border rounded-lg p-5">
             <div className="flex items-start justify-between gap-2 mb-3">
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${bg}`}>{icon}</div>
-              {sample && <SampleDataBadge />}
+              {sample ? <SampleDataBadge /> : <CohortTag n={n} />}
             </div>
             <p className="text-xl font-semibold text-foreground font-mono">{value.toLocaleString()}</p>
             <p className="text-xs text-muted-foreground mt-1">{label}</p>

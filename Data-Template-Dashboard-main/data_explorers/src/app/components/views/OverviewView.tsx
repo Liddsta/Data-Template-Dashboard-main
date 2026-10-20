@@ -3,9 +3,10 @@ import {
   PieChart, Pie, Cell,
 } from "recharts";
 import { Users, Activity, TrendingUp, Dna, Clock, Target } from "lucide-react";
-import { cohortStats, summaryStats, topMutatedGenes, stageDistribution, mutationTypes } from "../../data/genomicsData";
+import { cohortStats, summaryStats, gdcCohort, topMutatedGenes, stageDistribution, stageNotReported, mutationTypes } from "../../data/genomicsData";
 import { VizPanel } from "../VizPanel";
 import { SampleDataBadge } from "../SampleDataBadge";
+import { CohortTag } from "../CohortTag";
 
 const GENE_COLORS: Record<string, string> = {
   TSG: "#f43f5e",
@@ -50,7 +51,7 @@ export function OverviewView() {
             Liver Hepatocellular Carcinoma
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            {summaryStats.patientsTotal} patients · {summaryStats.patientsHigh} high / {summaryStats.patientsLow} low expression · median {summaryStats.medianExpressionTpm} TPM
+            {gdcCohort.totalCases} cases in the GDC extract · {summaryStats.patientsTotal} with expression + survival ({summaryStats.patientsHigh} high / {summaryStats.patientsLow} low)
           </p>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-md bg-muted text-muted-foreground border border-border">
@@ -62,8 +63,8 @@ export function OverviewView() {
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <StatCard
           label="Total Cases"
-          value={cohortStats.totalCases.toLocaleString()}
-          sub="Sequenced patients"
+          value={gdcCohort.totalCases.toLocaleString()}
+          sub={`GDC extract · ${cohortStats.totalCases} analysed`}
           icon={<Users className="w-4 h-4 text-blue-600" />}
         />
         <StatCard
@@ -148,7 +149,13 @@ export function OverviewView() {
         <div className="space-y-4">
           {/* Stage distribution */}
           <div className="bg-card border border-border rounded-lg p-5">
-            <h3 className="text-sm font-semibold text-foreground mb-3">Stage Distribution</h3>
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <h3 className="text-sm font-semibold text-foreground">Stage Distribution</h3>
+              <CohortTag n={gdcCohort.stagedCases} label="staged" />
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              AJCC pathologic stage · {stageNotReported} of {gdcCohort.totalCases} unstaged
+            </p>
             <div className="space-y-2">
               {stageDistribution.map((s, i) => {
                 const colors = ["#2563eb", "#0ea5e9", "#8b5cf6", "#f43f5e"];

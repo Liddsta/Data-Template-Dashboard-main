@@ -1,0 +1,17 @@
+gene,group,time_days,survival_prob
+TP53,High,0.0,1.0
+TP53,High,123.0,0.0
+TP53,Low,0.0,1.0
+TP53,Low,123.0,0.0
+EGFR,High,0.0,1.0
+EGFR,High,123.0,0.0
+EGFR,Low,0.0,1.0
+EGFR,Low,123.0,0.0
+KRAS,High,0.0,1.0
+KRAS,High,123.0,0.0
+KRAS,Low,0.0,1.0
+KRAS,Low,123.0,0.0
+BRCA1,High,0.0,1.0
+BRCA1,High,123.0,0.0
+BRCA1,Low,0.0,1.0
+BRCA1,Low,123.0,0.0
