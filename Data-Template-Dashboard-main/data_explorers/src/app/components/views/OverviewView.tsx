@@ -45,18 +45,13 @@ export function OverviewView() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground">
-            Liver Hepatocellular Carcinoma
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            {gdcCohort.totalCases} cases in the GDC extract · {summaryStats.patientsTotal} with expression + survival ({summaryStats.patientsHigh} high / {summaryStats.patientsLow} low)
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-md bg-muted text-muted-foreground border border-border">
-          <span>Source · Liver Dashboard Voz</span>
-        </div>
+      <div>
+        <h2 className="text-xl font-semibold text-foreground">
+          Liver Hepatocellular Carcinoma
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {gdcCohort.totalCases} cases in the GDC extract · {summaryStats.patientsTotal} with expression + survival ({summaryStats.patientsHigh} high / {summaryStats.patientsLow} low)
+        </p>
       </div>
 
       {/* Stat cards */}
