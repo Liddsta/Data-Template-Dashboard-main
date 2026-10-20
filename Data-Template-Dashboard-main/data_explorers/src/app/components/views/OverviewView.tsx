@@ -72,14 +72,14 @@ export function OverviewView() {
         <StatCard
           label="Median Survival"
           value={`${summaryStats.medianSurvivalHighMonths} / ${summaryStats.medianSurvivalLowMonths} mo`}
-          sub="High / low expression"
+          sub={`${summaryStats.gene} · high / low`}
           icon={<Clock className="w-4 h-4 text-sky-400" />}
           accent="bg-sky-500/15"
         />
         <StatCard
           label="Hazard Ratio"
           value={`${summaryStats.hazardRatio}`}
-          sub={`95% CI ${summaryStats.hazardRatioCI}`}
+          sub={`${summaryStats.gene} · CI ${summaryStats.hazardRatioCI}`}
           icon={<TrendingUp className="w-4 h-4 text-emerald-400" />}
           accent="bg-emerald-500/15"
         />

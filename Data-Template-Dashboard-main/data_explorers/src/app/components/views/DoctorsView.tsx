@@ -42,17 +42,17 @@ export function DoctorsView() {
       <div>
         <h2 className="text-xl font-semibold text-foreground">Survival Analysis</h2>
         <p className="text-sm text-muted-foreground mt-1">
-          Survival outcomes for the {summaryStats.patientsTotal} patients ({summaryStats.patientsHigh} high / {summaryStats.patientsLow} low expression). The Kaplan-Meier panel below is the live analysis; the stage-stratified figures further down are template sample data.
+          Survival for the {summaryStats.patientsTotal} patients ({summaryStats.patientsHigh} high / {summaryStats.patientsLow} low expression). The tiles below are fixed <span className="font-mono">{summaryStats.gene}</span> figures; the Kaplan-Meier panel has its own gene dropdown, so switching it there will not update them. Use the Gene Explorer tab for a fully linked view.
         </p>
       </div>
 
       {/* Key survival stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Median Survival, High", value: `${summaryStats.medianSurvivalHighMonths} mo`, color: "text-blue-600", bg: "bg-blue-600/10" },
-          { label: "Median Survival, Low", value: `${summaryStats.medianSurvivalLowMonths} mo`, color: "text-sky-400", bg: "bg-sky-500/15" },
-          { label: "Hazard Ratio, High vs Low", value: `${summaryStats.hazardRatio}`, color: "text-violet-400", bg: "bg-violet-500/15" },
-          { label: "Log-rank p-value", value: `${summaryStats.logRankP}`, color: "text-muted-foreground", bg: "bg-muted" },
+          { label: `Median Survival, High · ${summaryStats.gene}`, value: `${summaryStats.medianSurvivalHighMonths} mo`, color: "text-blue-600", bg: "bg-blue-600/10" },
+          { label: `Median Survival, Low · ${summaryStats.gene}`, value: `${summaryStats.medianSurvivalLowMonths} mo`, color: "text-sky-400", bg: "bg-sky-500/15" },
+          { label: `Hazard Ratio, High vs Low · ${summaryStats.gene}`, value: `${summaryStats.hazardRatio}`, color: "text-violet-400", bg: "bg-violet-500/15" },
+          { label: `Log-rank p-value · ${summaryStats.gene}`, value: `${summaryStats.logRankP}`, color: "text-muted-foreground", bg: "bg-muted" },
         ].map(({ label, value, color, bg }) => (
           <div key={label} className="bg-card border border-border rounded-lg p-5">
             <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${bg} mb-3`}>
@@ -165,7 +165,7 @@ export function DoctorsView() {
         <div className="mt-4 p-3 rounded-lg bg-muted/40 border border-border/50 flex items-start gap-2">
           <AlertCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Per-stage survival figures in this table are simulated template values, not from the Liver Dashboard workbook. The cohort&rsquo;s actual high-vs-low comparison is not significant: HR {summaryStats.hazardRatio} (95% CI {summaryStats.hazardRatioCI}), log-rank p = {summaryStats.logRankP}, FDR-adjusted p = {summaryStats.fdrAdjustedP}.
+            Per-stage survival figures in this table are simulated template values, not from the Liver Dashboard workbook. For <span className="font-mono">{summaryStats.gene}</span>, the actual high-vs-low comparison is not significant: HR {summaryStats.hazardRatio} (95% CI {summaryStats.hazardRatioCI}), log-rank p = {summaryStats.logRankP}, FDR-adjusted p = {summaryStats.fdrAdjustedP}.
           </p>
         </div>
       </div>

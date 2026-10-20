@@ -27,11 +27,13 @@ export function ExplorerView() {
       <div className="rounded-lg border border-blue-600/25 bg-blue-600/[0.05] px-4 py-3 flex items-start gap-2.5">
         <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
         <p className="text-xs text-foreground/70 leading-relaxed">
-          The gene you pick here applies to this panel only. Every other tab is pinned to the
-          workbook default, <span className="font-mono font-medium">MT2A</span> &mdash; including the
-          headline statistics (HR {summaryStats.hazardRatio}, log-rank p {summaryStats.logRankP},
-          median survival {summaryStats.medianSurvivalHighMonths}/{summaryStats.medianSurvivalLowMonths} months),
-          which are MT2A figures and will not follow a change made here.
+          Every chart in this panel shares one dropdown, so they always describe the same gene.
+          Elsewhere each panel has its own dropdown and its own session &mdash; changing the gene on
+          one tab does not change the others, and the fixed statistics beside them
+          (HR {summaryStats.hazardRatio}, log-rank p {summaryStats.logRankP},
+          median survival {summaryStats.medianSurvivalHighMonths}/{summaryStats.medianSurvivalLowMonths} months)
+          are <span className="font-mono font-medium">{summaryStats.gene}</span> figures that never
+          follow a change. Prefer this tab when comparing genes.
         </p>
       </div>
 

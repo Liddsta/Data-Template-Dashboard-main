@@ -11,6 +11,14 @@
  * low-expression groups. Nothing in the UI may describe it as significant.
  */
 export const summaryStats = {
+  /**
+   * Every figure below except the patient counts is specific to THIS gene.
+   * The workbook now exposes a gene dropdown on each panel, so if a viewer
+   * switches genes these numbers no longer describe what they are looking at —
+   * which is why the UI labels them with the gene name rather than presenting
+   * them as cohort-wide facts.
+   */
+  gene: "MT2A",
   patientsTotal: 388,
   patientsHigh: 194,
   patientsLow: 194,

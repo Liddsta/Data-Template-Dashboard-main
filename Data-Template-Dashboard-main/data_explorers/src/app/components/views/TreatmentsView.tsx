@@ -18,7 +18,7 @@ export function TreatmentsView() {
           { label: "Patients", value: `${summaryStats.patientsTotal}`, icon: <Microscope className="w-4 h-4 text-blue-600" />, bg: "bg-blue-600/10" },
           { label: "High Expression", value: `${summaryStats.patientsHigh}`, icon: <TrendingUp className="w-4 h-4 text-blue-600" />, bg: "bg-blue-600/10" },
           { label: "Low Expression", value: `${summaryStats.patientsLow}`, icon: <TrendingDown className="w-4 h-4 text-sky-400" />, bg: "bg-sky-500/15" },
-          { label: "Median Expression", value: `${summaryStats.medianExpressionTpm} TPM`, icon: <Dna className="w-4 h-4 text-violet-400" />, bg: "bg-violet-500/15" },
+          { label: `Median Expression · ${summaryStats.gene}`, value: `${summaryStats.medianExpressionTpm} TPM`, icon: <Dna className="w-4 h-4 text-violet-400" />, bg: "bg-violet-500/15" },
         ].map(({ label, value, icon, bg }) => (
           <div key={label} className="bg-card border border-border rounded-lg p-5">
             <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${bg} mb-3`}>{icon}</div>

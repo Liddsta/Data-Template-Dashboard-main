@@ -140,10 +140,19 @@ const sheetPath = (sheet: string) => `views/${WORKBOOK}/${sheet.replace(/\s+/g, 
  * string is assembled by hand rather than via URLSearchParams (which would
  * percent-encode the colons).
  */
+/**
+ * The workbook's Gene Parameter now has a dropdown on every worksheet, and each
+ * panel is an independent iframe session. Pinning the initial value keeps all
+ * panels starting on the same gene — without it they inherit whatever the
+ * workbook default happens to be, and can silently disagree.
+ */
+export const DEFAULT_GENE = "MT2A";
+
 const EMBED_PARAMS = [
   ":embed=y",
   ":showVizHome=no",
   ":toolbar=yes",
+  `${encodeURIComponent("Gene Parameter")}=${encodeURIComponent(DEFAULT_GENE)}`,
   // The workbook is published with tabs, so without this every panel would
   // render the full tab strip and let viewers navigate away from the sheet
   // that panel is supposed to show.
